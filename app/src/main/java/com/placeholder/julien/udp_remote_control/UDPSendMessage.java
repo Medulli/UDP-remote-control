@@ -19,19 +19,22 @@ public class UDPSendMessage extends AsyncTask<Void, Void, Boolean> {
     //server settings
     private String host;
     private int port;
+    private int payload;
     //messages to send
-    private ArrayList<String> messages;
-    private ArrayList<Integer> delay;
+    private ArrayList<ArrayList<String>> messagesList;
+    private ArrayList<ArrayList<Integer>> delaysList;
     //exception if failed
     private Exception exception;
     //parent activity, to display success or failure
     private Activity activity;
+    public String test;
 
-    public UDPSendMessage(final Activity activity,ArrayList<String> messages, ArrayList<Integer> delay, String host, int port) {
-        this.messages = messages;
-        this.delay = delay;
+    public UDPSendMessage(final Activity activity,ArrayList<ArrayList<String>> messagesList, ArrayList<ArrayList<Integer>> delaysList, String host, int port, int payload) {
+        this.messagesList = messagesList;
+        this.delaysList = delaysList;
         this.host = host;
         this.port = port;
+        this.payload=payload;
         this.activity=activity;
     }
 
@@ -44,17 +47,27 @@ public class UDPSendMessage extends AsyncTask<Void, Void, Boolean> {
             //create a socket
             DatagramSocket socket = new DatagramSocket();
 
-            //go through every message
-            for(int i = 0; i<messages.size(); i++){
-                //create message buffer
-                byte[] message = messages.get(i).getBytes(StandardCharsets.US_ASCII);
-                //initialize a datagram packet with data and address
-                DatagramPacket packet = new DatagramPacket(message, message.length,
-                        address, port);
-                //sleep according to delay
-                Thread.sleep(delay.get(i));
-                //send the packet
-                socket.send(packet);
+            //go through each sequence
+            for(int i=0;i<delaysList.size();i++) {
+                ArrayList<String> messages = messagesList.get(i);
+                ArrayList<Integer> delay = delaysList.get(i);
+                //go through each message
+                for (int j = 0; j < messages.size(); j++) {
+                    //create message buffer
+                    byte[] message = messages.get(j).getBytes(StandardCharsets.US_ASCII);
+                    test=String.valueOf(message.length);
+                    //sleep according to delay
+                    Thread.sleep(delay.get(j));
+                    //initialize a datagram packet with data and address
+                    for(int k=0;k<message.length;k+=payload){
+                        //split the packet
+                        DatagramPacket packet = new DatagramPacket(message, k, Math.min(payload, message.length-k));
+                        //send the packet
+                        packet.setAddress(address);
+                        packet.setPort(port);
+                        socket.send(packet);
+                    }
+                }
             }
             //close the socket
             socket.close();

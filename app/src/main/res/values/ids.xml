@@ -4,4 +4,7 @@
     <item type="id" name="spinner_tail" />
     <item type="id" name="text_delay" />
     <item type="id" name="text_ms" />
+    <item type="id" name="seq_name" />
+    <item type="id" name="button_add" />
+    <item type="id" name="button_remove" />
 </resources>

@@ -2,5 +2,6 @@
 <resources>
 
     <integer name="pref_port_default">4444</integer>
+    <integer name="pref_payload_default">16</integer>
 
 </resources>

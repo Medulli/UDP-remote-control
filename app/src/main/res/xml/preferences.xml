@@ -13,5 +13,11 @@
             android:defaultValue="@integer/pref_port_default"
             android:inputType="number"
             android:key="pref_port"/>
+        <EditTextPreference
+            android:title="@string/pref_payload"
+            android:summary="@string/pref_payload_summary"
+            android:defaultValue="@integer/pref_payload_default"
+            android:inputType="number"
+            android:key="pref_payload"/>
     </PreferenceCategory>
 </PreferenceScreen>
